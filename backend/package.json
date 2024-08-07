@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/dennohtu/ToDoList/issues"
   },
-  "homepage": "https://github.com/dennohtu/ToDoList#readme"
+  "homepage": "https://github.com/dennohtu/ToDoList#readme",
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "express": "^4.19.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.2"
+  }
 }
