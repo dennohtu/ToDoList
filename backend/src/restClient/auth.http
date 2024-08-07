@@ -1,0 +1,17 @@
+### Register a user
+POST http://localhost:3000/user/register
+Content-Type: application/json
+
+{
+    "email": "mario@google.com",
+    "password": "test12"
+}
+
+### Login a user
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+    "email": "mario@google.com",
+    "password": "test12"
+}
