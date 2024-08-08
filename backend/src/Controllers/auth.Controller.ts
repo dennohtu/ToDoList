@@ -5,6 +5,7 @@ import { MongoError } from "../Interfaces/mongoError";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { authSchema } from "../Validators/auth.Validators";
 
 dotenv.config();
 
@@ -39,6 +40,17 @@ export const registerUser = (async (req: Request, res: Response) => {
     try {
         const user: registerDetails = req.body;
 
+        const { error } = authSchema.validate(user);
+
+        if (error) {
+            return res.status(202).json({
+                success: false,
+                data: {
+                    errorMsg: error.details[0].message
+                }
+            })
+        }
+
         const hashPwd = await bcrypt.hash(user.password, 5);
 
         await userModel.create({
@@ -67,6 +79,17 @@ export const loginUser = (async (req: Request, res: Response) => {
     try {
         const user: loginDetails = req.body;
 
+        const { error } = authSchema.validate(user);
+
+        if (error) {
+            return res.status(202).json({
+                success: false,
+                data: {
+                    errorMsg: error.details[0].message
+                }
+            })
+        }
+
         const User = await userModel.findOne({ email: user.email });
 
         if (!User) {
@@ -92,7 +115,7 @@ export const loginUser = (async (req: Request, res: Response) => {
         const token = createToken(User._id.toString());
 
         console.log(User._id.toString());
-        
+
 
         res.status(200).json({
             success: true,

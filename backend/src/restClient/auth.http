@@ -3,8 +3,8 @@ POST http://localhost:3000/user/register
 Content-Type: application/json
 
 {
-    "email": "kenny@google.com",
-    "password": "test12"
+    "email": "",
+    "password": ""
 }
 
 ### Login a user
@@ -12,6 +12,6 @@ POST http://localhost:3000/user/login
 Content-Type: application/json
 
 {
-    "email": "kenny@google.com",
+    "email": "",
     "password": "test12"
 }
