@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Mongoose } from 'mongoose'
 
 const taskModelSchema = new mongoose.Schema({
     userId: {
@@ -21,14 +21,6 @@ const taskModelSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
-
-taskModelSchema.pre('save', function (next) {
-    console.log("checking if title was changed")
-    if(this.isModified("title")) {
-        this.isEdited = true
-    }
-
-})
 
 const Task = mongoose.model("Tasks", taskModelSchema)
 

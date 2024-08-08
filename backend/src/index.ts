@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import express, { json } from "express";
 import dotenv from "dotenv";
-import authRoutes from "./Routes/auth.Routes";
+
 import bodyParser from 'body-parser'
 import cors from 'cors'
 
 import TaskRoutes from './routes/routes.tasks'
+import authRoutes from "./routes/auth.Routes";
 
 dotenv.config();
 

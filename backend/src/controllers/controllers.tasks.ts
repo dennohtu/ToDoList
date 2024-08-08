@@ -4,7 +4,7 @@ import {Request, Response} from 'express'
 import Task from "../models/models.tasks";
 
 const schema = Joi.object({
-    title: Joi.string().alphanum().min(1).max(30).required(),
+    title: Joi.string().min(1).max(30).optional(),
     status: Joi.string().valid("new", "ongoing", "completed")
 })
 
@@ -68,13 +68,27 @@ export const update = async (req: Request, res: Response) => {
             return
         }
 
-        const task = await Task.findOneAndUpdate({_id: taskid}, req.body, {new: true})
+        const task = await Task.findOne({_id: taskid})
 
         if(!task) {
+            sendResponse(res, false, "Could not find task")
+            return
+        }
+
+        if(req.body.title) {
+            if(req.body.title != task.title) {
+                req.body.isEdited = true
+            }
+        }
+
+
+        const taskE = await Task.findOneAndUpdate({_id: taskid}, req.body, {new: true})
+
+        if(!taskE) {
             sendResponse(res, false, "Could not find task to update")
             return
         }
-        sendResponse(res, true, task.toJSON())
+        sendResponse(res, true, taskE.toJSON())
     } catch (err: any) {
         console.log(err)
         sendResponse(res, false, err.message)

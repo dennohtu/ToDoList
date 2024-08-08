@@ -13,7 +13,7 @@ export default function (req: Request, res: Response, next: NextFunction) {
         }
         const jwtToken = token.split(" ")[1]
 
-        const data = jwt.verify(jwtToken, process.env.JWT_SECRET as jwt.Secret).toString()
+        const data = jwt.verify(jwtToken, process.env.SECRET as jwt.Secret).toString()
 
         req.userid = data
 
