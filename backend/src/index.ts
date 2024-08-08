@@ -13,7 +13,7 @@ const PORT = process.env.PORT as string;
 const app = express();
 
 app.use(json());
-app.use(authRoutes);
+app.use('/api/user', authRoutes);
 
 mongoose.connect(LOCAL_URI || MONGO_URI)
 .then(() => {

@@ -43,10 +43,10 @@ export const registerUser = (async (req: Request, res: Response) => {
         const { error } = authSchema.validate(user);
 
         if (error) {
-            return res.status(202).json({
+            return res.status(400).json({
                 success: false,
                 data: {
-                    errorMsg: error.details[0].message
+                    errorMsg: error.message
                 }
             })
         }
@@ -85,7 +85,7 @@ export const loginUser = (async (req: Request, res: Response) => {
             return res.status(202).json({
                 success: false,
                 data: {
-                    errorMsg: error.details[0].message
+                    errorMsg: error.message
                 }
             })
         }
