@@ -7,7 +7,7 @@ const Auth = () => {
                 <h1>Registration</h1>
                 <form>
                     <label>
-                        Username:
+                        Email:
                         <input type="text" name="username" />
                     </label>
                     <label>
