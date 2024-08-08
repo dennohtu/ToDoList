@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import * as yup from "yup";
 
  
-const Login = () => {
+const Register = () => {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="flex justify-center items-center min-h-screen">
         <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
-          <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h1>
+          <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Register</h1>
           <form>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -34,14 +34,14 @@ const Login = () => {
             <div className="flex items-center justify-between">
               <input 
                 type="submit" 
-                value="Login" 
+                value="Register" 
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer"
               />
                <div className="flex justify-center items-center mt-4">
       <p className="text-gray-700 text-sm">
-        Do you have an account?{" "}
-        <Link to="/register" className="text-blue-500 hover:underline">
-          Register
+         You already have an account?{" "}
+        <Link to="/" className="text-blue-500 hover:underline">
+          Login
         </Link>
       </p>
     </div>
@@ -52,4 +52,4 @@ const Login = () => {
     );
 };
  
-export default Login;
+export default Register;
