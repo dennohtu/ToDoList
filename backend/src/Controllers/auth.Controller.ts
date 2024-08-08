@@ -2,6 +2,11 @@ import { Request, Response } from "express";
 import { registerDetails, loginDetails } from "../Interfaces/user.Interface";
 import { userModel } from "../Models/user.Model";
 import { MongoError } from "../Interfaces/mongoError";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const handleMongoError = ((err: MongoError) => {
     let errors: any = { email: "", password: "" }
@@ -21,14 +26,24 @@ export const handleMongoError = ((err: MongoError) => {
     return errors
 });
 
+// Create json web token
+export const createToken = ((_id: string) => {
+    const SECRET: string = process.env.SECRET as string
+    const token = jwt.sign(_id, SECRET);
+
+    return token;
+});
+
 // Register a user
 export const registerUser = (async (req: Request, res: Response) => {
     try {
         const user: registerDetails = req.body;
 
+        const hashPwd = await bcrypt.hash(user.password, 5);
+
         await userModel.create({
             email: user.email,
-            password: user.password
+            password: hashPwd
         });
 
         res.status(200).json({
@@ -63,7 +78,7 @@ export const loginUser = (async (req: Request, res: Response) => {
             })
         }
 
-        const isPassword = User.password === user.password;
+        const isPassword = await bcrypt.compare(user.password, User.password);
 
         if (!isPassword) {
             return res.status(202).json({
@@ -74,10 +89,16 @@ export const loginUser = (async (req: Request, res: Response) => {
             })
         }
 
+        const token = createToken(User._id.toString());
+
+        console.log(User._id.toString());
+        
+
         res.status(200).json({
             success: true,
             data: {
-                successMsg: "Login successful"
+                successMsg: "Login successful",
+                token
             }
         })
 
