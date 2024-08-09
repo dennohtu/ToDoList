@@ -1,52 +1,48 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import axios from "axios"
 
 const Card = () => {
-  const initialTodos = [
-    {
-      id: "1",
-      task: "Respond to client emails",
-      priority: "high",
-      completed: "Todo",
-    },
-    {
-      id: "2",
-      task: "Prepare for team meeting",
-      priority: "medium",
-      completed: "Todo",
-    },
-    {
-      id: "3",
-      task: "Review project proposal",
-      priority: "high",
-      completed: "Todo",
-    },
-    {
-      id: "4",
-      task: "Update project documentation",
-      priority: "low",
-      completed: "Todo",
-    },
-    {
-      id: "5",
-      task: "Send acknowledgment email to Justus",
-      priority: "high",
-      completed: "Todo",
-    },
-  ];
+const [todo, setTodo]= useState([])
+const [ongoing, setOngoing] = useState([])
+const [resolved, setResolved] = useState([])
+const [error ,setError]=useState()
+useEffect(() => {
+  const fetchData = async () => {
+    // const API = axios({
+    //   baseURL: "http://localhost:5000/",
+    //   withCredentials: true,
+    // });
 
-  const [todos, setTodos] = useState(initialTodos);
+    try {
+      const response = await axios.get("http://localhost:5000/api/tasks/getAll"); 
+      const data = response.data;
+console.log(data)
+      // Assuming data is an array of tasks with a `completed` status
+      setTodo(data.filter((task) => task.completed === "new"));
+      setOngoing(data.filter((task) => task.completed === "ongoing"));
+      setResolved(data.filter((task) => task.completed === "done"));
+    } catch (error) {
+      setError("Error fetching data");
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  fetchData();
+}, []);
+
+  
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
 
     if (!destination) return;
 
-    const updatedTodos = Array.from(todos);
-    const [movedItem] = updatedTodos.splice(source.index, 1);
-    updatedTodos.splice(destination.index, 0, movedItem);
+    const updatedTodo = Array.from(todo);
+    const [movedItem] = updatedTodo.splice(source.index, 1);
+    updatedTodo.splice(destination.index, 0, movedItem);
 
-    setTodos(updatedTodos);
+    setTodo(updatedTodo);
   };
 
   return (
@@ -61,8 +57,7 @@ const Card = () => {
               className="space-y-3" 
               {...provided.droppableProps} 
               ref={provided.innerRef}>
-                {todos
-                  .filter((todo) => todo.completed === "Todo")
+                {todo
                   .map((todo, index) => (
                     <Draggable
                       key={todo.id}
@@ -97,8 +92,8 @@ const Card = () => {
           <Droppable droppableId="Ongoing" type="group">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {todos
-                  .filter((todo) => todo.completed === "Ongoing")
+                {todo
+                 
                   .map((todo, index) => (
                     <Draggable
                       key={todo.id}
@@ -133,8 +128,8 @@ const Card = () => {
           <Droppable droppableId="Resolved" type="group">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {todos
-                  .filter((todo) => todo.completed === "Resolved")
+                {todo
+                  
                   .map((todo, index) => (
                     <Draggable
                       key={todo.id}
