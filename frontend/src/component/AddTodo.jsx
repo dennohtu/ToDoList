@@ -6,15 +6,34 @@ const AddTodo = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleAddTodo = async () => {
-    try {
-      const response = await axios.post('http://localhost:5000/api/tasks/create', {
-        title,
-      });
+  const handleAddTodo = async (e) => {
+    e.preventDefault(); // Prevent the default form submission
 
-      if (response.status === 201) {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setError("You need to log in to add a to-do item.");
+        return;
+      }
+
+      const response = await axios.post(
+        'http://localhost:5000/api/tasks/create',
+        {
+          title: title
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      console.log('response:', response.data.success);
+
+      if (response.data.success === true) {
         setSuccess("To-do item added successfully!");
-        setTitle(""); // Clear the input field
+        setTitle(""); // Clear the input field on success
       } else {
         setError("Failed to add the to-do item.");
       }
@@ -25,7 +44,7 @@ const AddTodo = () => {
 
   return (
     <div>
-      <div className="flex mb-4">
+      <form onSubmit={handleAddTodo} className="flex mb-4">
         <input
           type="text"
           placeholder="Enter a new to-do"
@@ -34,12 +53,12 @@ const AddTodo = () => {
           className="flex-1 p-1 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
-          onClick={handleAddTodo}
+          type="submit"
           className="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Add
         </button>
-      </div>
+      </form>
       {error && <p className="text-red-500">{error}</p>}
       {success && <p className="text-green-500">{success}</p>}
     </div>

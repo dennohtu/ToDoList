@@ -8,35 +8,19 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Check if user data is in local storage
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      if (user.email === email && user.password === password) {
-        // Redirect to dashboard if credentials match
-        navigate("/dashboard");
-        return;
-      } else {
-        setError("Invalid email or password.");
-        return;
-      }
-    }
-
-    // If not in local storage, make an API call
     try {
       const response = await axios.post("http://localhost:5000/api/user/login", {
         email,
         password,
       });
 
-      if (response.data && response.data.token) {
-        // Save user data to local storage
-        localStorage.setItem("user", JSON.stringify({ email, token: response.data.token }));
-
-        // Redirect to dashboard
+      if (response) {
+        const result = response.data.data
+        console.log(result);
+        localStorage.setItem('token', result.token);
         navigate("/dashboard");
       } else {
         setError("Invalid email or password.");
