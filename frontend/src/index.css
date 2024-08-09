@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    background-color: rgb(148, 152, 148);
+body {
+    background-image: url("https://images.unsplash.com/photo-1552664730-d307ca884978");
+    background-size: cover;
+    background-position: center;
 }
+

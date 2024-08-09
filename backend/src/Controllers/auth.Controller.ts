@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { registerDetails, loginDetails } from "../Interfaces/user.Interface";
-import { userModel } from "../Models/user.Model";
-import { MongoError } from "../Interfaces/mongoError";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { authSchema } from "../Validators/auth.Validators";
+import { MongoError } from "../interfaces/mongoError";
+import { userModel } from "../models/user.Model";
+import { loginDetails, registerDetails } from "../interfaces/user.Interface";
 
 dotenv.config();
 
