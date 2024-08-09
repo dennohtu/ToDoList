@@ -36,6 +36,8 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }))
 app.use(bodyParser.json({limit: '50mb'}))
+app.use("/api", authRoutes);
+app.use("/api", TaskRoutes);
 
 
 
