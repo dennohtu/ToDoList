@@ -14,8 +14,6 @@ dotenv.config();
 const app = express();
 
 app.use(json());
-app.use('/api/user', authRoutes);
-app.use("/api/tasks", TaskRoutes);
 
 const mongoString:string = process.env.MONGO_URL as string
 mongoose.connect(mongoString)
@@ -30,8 +28,16 @@ database.once("connected", () => {
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use(cors())
+app.use(cors({
+    allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Methods", "Access-Control-Request-Headers"],
+    credentials: true,
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}))
 app.use(bodyParser.json({limit: '50mb'}))
+
+app.use('/api/user', authRoutes);
+app.use("/api/tasks", TaskRoutes);
 
 
 
