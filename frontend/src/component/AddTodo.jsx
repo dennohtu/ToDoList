@@ -46,6 +46,7 @@ const AddTodo = () => {
     <div>
       <form onSubmit={handleAddTodo} className="flex mb-4">
         <input
+          id='todo-input'
           type="text"
           placeholder="Enter a new to-do"
           value={title}
@@ -53,6 +54,7 @@ const AddTodo = () => {
           className="flex-1 p-1 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
+          id='add-todo-button'
           type="submit"
           className="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >

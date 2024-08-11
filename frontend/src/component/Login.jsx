@@ -33,7 +33,9 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          Login
+        </h1>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleLogin}>
           <div className="mb-4">
@@ -41,6 +43,7 @@ const Login = () => {
               Email:
             </label>
             <input
+              id="email"
               type="text"
               name="email"
               value={email}
@@ -54,6 +57,7 @@ const Login = () => {
               Password:
             </label>
             <input
+              id="password"
               type="password"
               name="password"
               value={password}
@@ -64,6 +68,7 @@ const Login = () => {
           </div>
           <div className="flex items-center justify-between">
             <input
+              id="login-button"
               type="submit"
               value="Login"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer"
