@@ -10,10 +10,13 @@ describe("Login", () => {
     cy.get("#email").type("text");
     cy.get("#password").type("password", { log: false });
     cy.get("#login-button").click();
-    cy.url().should("include", "/dashboard");
+    cy.url().should( "include", "/dashboard" );
+    cy.get("#todo-input").type("New Cypress Todo");
+    cy.get("#add-todo-button").click();
+    cy.get("#Todo").contains("new todo").should("be.visible");
   } );
   
- 
+  
 } );
 
 
