@@ -1,0 +1,2 @@
+GET http://localhost:5000/api/tasks/getAll
+Authorization: jwt eyJhbGciOiJIUzI1NiJ9.NjZiNjJhYmYzZDg4ZjU2N2FjZjI0OTc3.Luc6pYzFIWR29xhFibPHiUH_588wiFPlAipd6AIPfcI
