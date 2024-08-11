@@ -4,9 +4,10 @@ import dotenv from "dotenv";
 
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import authRoutes from "./Routes/auth.Routes";
+import TaskRoutes from "./Routes/routes.tasks";
 
-import TaskRoutes from './routes/routes.tasks'
-import authRoutes from "./routes/auth.Routes";
+
 
 dotenv.config();
 
@@ -35,8 +36,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }))
 app.use(bodyParser.json({limit: '50mb'}))
-
-app.use('/api/user', authRoutes);
+app.use("/api/user", authRoutes);
 app.use("/api/tasks", TaskRoutes);
 
 
