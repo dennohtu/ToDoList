@@ -3,178 +3,7 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import axios from "axios";
 import getToken from "../auth.Service";
 
-// const Card = () => {
-//   const [todo, setTodo] = useState([]);
-//   const [ongoing, setOngoing] = useState([]);
-//   const [resolved, setResolved] = useState([]);
-//   // const [error, setError] = useState();
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       // const API = axios({
-//       //   baseURL: "http://localhost:5000/",
-//       //   withCredentials: true,
-//       // });
 
-//       const token = getToken();
-
-//       console.log(token);
-
-//       try {
-//         const response = await axios.get(
-//           "http://localhost:5000/api/tasks/getAll",
-//           {
-//             headers: {
-//               Authorization: `jwt ${token}`,
-//             },
-//           }
-//         );
-//         const data = response.data.data;
-//         console.log(data);
-//         // Assuming data is an array of tasks with a `completed` status
-//         setTodo(data.filter((task) => task.status === "new"));
-//         setOngoing(data.filter((task) => task.status === "ongoing"));
-//         setResolved(data.filter((task) => task.status === "done"));
-//       } catch (error) {
-//         // setError("Error fetching data");
-//         console.error("Error fetching data:", error);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   const handleDragEnd = (result) => {
-//     const { source, destination } = result;
-
-//     if (!destination) return;
-
-//     const updatedTodo = Array.from(todo);
-//     const [movedItem] = updatedTodo.splice(source.index, 1);
-//     updatedTodo.splice(destination.index, 0, movedItem);
-// console.log(result)
-//     setTodo(updatedTodo);
-//   };
-
-//   return (
-//     <div id="main" className="flex space-x-8 justify-center ">
-//       <DragDropContext onDragEnd={handleDragEnd}>
-//         {/* To Do Section */}
-//         <div className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216">
-//           <p className="border rounded-3xl w-72 backdrop-blur bg-blue-300">
-//             To Do
-//           </p>
-//           <Droppable droppableId="Todo" type="group">
-//             {(provided) => (
-//               <div
-//                 className="space-y-3"
-//                 {...provided.droppableProps}
-//                 ref={provided.innerRef}
-//               >
-//                 {todo.map((todo, index) => (
-//                   <Draggable
-//                     key={todo._id}
-//                     draggableId={todo._id}
-//                     index={index}
-//                   >
-//                     {(provided) => (
-//                       <div
-//                         draggable="true"
-//                         ref={provided.innerRef}
-//                         {...provided.draggableProps}
-//                         {...provided.dragHandleProps}
-//                         id={todo._id}
-//                         className="flex-row border rounded-lg justify-center content-start h-20"
-//                       >
-//                         <h3>{todo.title}</h3>
-//                         <p>Title: {todo.title}</p>
-//                         <p>Status: {todo.status}</p>
-//                       </div>
-//                     )}
-//                   </Draggable>
-//                 ))}
-//                 {provided.placeholder}
-//               </div>
-//             )}
-//           </Droppable>
-//         </div>
-
-//         {/* Ongoing Section */}
-//         <div className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5">
-//           <p className="border rounded-3xl w-72 backdrop-blur bg-yellow-300">
-//             Ongoing
-//           </p>
-//           <Droppable droppableId="Ongoing" type="group">
-//             {(provided) => (
-//               <div {...provided.droppableProps} ref={provided.innerRef}>
-//                 {ongoing.map((todo, index) => (
-//                   <Draggable
-//                     key={todo._id}
-//                     draggableId={todo._id}
-//                     index={index}
-//                   >
-//                     {(provided) => (
-//                       <div
-//                         draggable="true"
-//                         ref={provided.innerRef}
-//                         {...provided.draggableProps}
-//                         {...provided.dragHandleProps}
-//                         id={todo._id}
-//                         className="flex-row border rounded-lg justify-center content-start h-20"
-//                       >
-//                         <h3>{todo.title}</h3>
-//                         <p>Title: {todo.title}</p>
-//                         <p>Status: {todo.status}</p>
-//                       </div>
-//                     )}
-//                   </Draggable>
-//                 ))}
-//                 {provided.placeholder}
-//               </div>
-//             )}
-//           </Droppable>
-//         </div>
-
-//         {/* Resolved Section */}
-//         <div className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5">
-//           <p className="border rounded-3xl w-72 backdrop-blur bg-green-300">
-//             Resolved
-//           </p>
-//           <Droppable droppableId="Resolved" type="group">
-//             {(provided) => (
-//               <div {...provided.droppableProps} ref={provided.innerRef}>
-//                 {resolved.map((todo, index) => (
-//                   <Draggable
-//                     key={todo._id}
-//                     draggableId={todo._id}
-//                     index={index}
-//                   >
-//                     {(provided) => (
-//                       <div
-//                         draggable="true"
-//                         ref={provided.innerRef}
-//                         {...provided.draggableProps}
-//                         {...provided.dragHandleProps}
-//                         id={todo._id}
-//                         className="flex-row border rounded-lg justify-center content-start h-20"
-//                       >
-//                         <h3>{todo.title}</h3>
-//                         <p>Title: {todo.title}</p>
-//                         <p>Status: {todo.status}</p>
-//                       </div>
-//                     )}
-//                   </Draggable>
-//                 ))}
-//                 {provided.placeholder}
-//               </div>
-//             )}
-//           </Droppable>
-//         </div>
-//       </DragDropContext>
-//     </div>
-//   );
-// };
-
-// export default Card;
 const Card = () => {
   const [todo, setTodo] = useState([]);
   const [ongoing, setOngoing] = useState([]);
@@ -263,22 +92,28 @@ const Card = () => {
       else if (destination.droppableId === "Resolved") setResolved(destinationItems);
     }
   };
+const handleSave =(()=>{
+//add a save button
 
+})
   return (
-    <div id="main" className="flex space-x-8 justify-center">
+    <div id="main" className="flex-row space-y-8 ">
       <DragDropContext onDragEnd={handleDragEnd}>
-        {/* To Do Section */}
-        <div className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216">
-          <p className="border rounded-3xl w-72 backdrop-blur bg-blue-300">
-            To Do
-          </p>
+        <div className="flex space-x-8 justify-center">
+
+         
           <Droppable droppableId="Todo" type="group">
             {(provided) => (
               <div
-                className="space-y-3"
+              
+                className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
+                id="Todo"
               >
+                 <p className="border rounded-3xl w-72 backdrop-blur bg-blue-300">
+            To Do
+          </p>
                 {todo.map((task, index) => (
                   <Draggable key={task._id} draggableId={task._id} index={index}>
                     {(provided) => (
@@ -301,16 +136,21 @@ const Card = () => {
               </div>
             )}
           </Droppable>
-        </div>
+    
 
         {/* Ongoing Section */}
-        <div className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5">
-          <p className="border rounded-3xl w-72 backdrop-blur bg-yellow-300">
-            Ongoing
-          </p>
+        
+         
           <Droppable droppableId="Ongoing" type="group">
             {(provided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
+              <div
+              className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216"
+               {...provided.droppableProps} ref={provided.innerRef}
+              id="Ongoing"
+              >
+                 <p className="border rounded-3xl w-72 backdrop-blur bg-yellow-300">
+            Ongoing
+          </p>
                 {ongoing.map((task, index) => (
                   <Draggable key={task._id} draggableId={task._id} index={index}>
                     {(provided) => (
@@ -333,16 +173,21 @@ const Card = () => {
               </div>
             )}
           </Droppable>
-        </div>
+      
 
         {/* Resolved Section */}
-        <div className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5">
-          <p className="border rounded-3xl w-72 backdrop-blur bg-green-300">
-            Resolved
-          </p>
+        
+         
           <Droppable droppableId="Resolved" type="group">
             {(provided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
+
+              <div 
+              className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216"
+              {...provided.droppableProps} ref={provided.innerRef}
+              id="Resolved">
+                 <p className="border rounded-3xl w-72 backdrop-blur bg-green-300">
+            Resolved
+          </p>
                 {resolved.map((task, index) => (
                   <Draggable key={task._id} draggableId={task._id} index={index}>
                     {(provided) => (
@@ -365,8 +210,18 @@ const Card = () => {
               </div>
             )}
           </Droppable>
+    
         </div>
+        
       </DragDropContext>
+      <div>
+        <button type="submit" 
+        name="Save" 
+        onClick={handleSave} 
+        className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500" >
+          Save
+    </button>
+      </div>
     </div>
   );
 };
