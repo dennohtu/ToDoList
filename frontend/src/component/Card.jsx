@@ -1,39 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import axios from "axios";
-import getToken from "../auth.Service";
 
-
-const Card = () => {
-  const [todo, setTodo] = useState([]);
-  const [ongoing, setOngoing] = useState([]);
-  const [resolved, setResolved] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = getToken();
-
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/tasks/getAll",
-          {
-            headers: {
-              Authorization: `jwt ${token}`,
-            },
-          }
-        );
-        const data = response.data.data;
-        setTodo(data.filter((task) => task.status === "new"));
-        setOngoing(data.filter((task) => task.status === "ongoing"));
-        setResolved(data.filter((task) => task.status === "done"));
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+const Card = ({
+  todo,
+  ongoing,
+  resolved,
+  setTodo,
+  setOngoing,
+  setResolved,
+  fetchData,
+}) => {
   const handleDragEnd = (result) => {
     const { source, destination } = result;
 
@@ -88,34 +64,39 @@ const Card = () => {
       else if (source.droppableId === "Resolved") setResolved(sourceItems);
 
       if (destination.droppableId === "Todo") setTodo(destinationItems);
-      else if (destination.droppableId === "Ongoing") setOngoing(destinationItems);
-      else if (destination.droppableId === "Resolved") setResolved(destinationItems);
+      else if (destination.droppableId === "Ongoing")
+        setOngoing(destinationItems);
+      else if (destination.droppableId === "Resolved")
+        setResolved(destinationItems);
     }
   };
-const handleSave =(()=>{
-//add a save button
+  const handleSave = () => {
+    //add a save button
+    //fetch data to update state
+    fetchData();
+  };
 
-})
   return (
     <div id="main" className="flex-row space-y-8 ">
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex space-x-8 justify-center">
-
-         
           <Droppable droppableId="Todo" type="group">
             {(provided) => (
               <div
-              
                 className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 id="Todo"
               >
-                 <p className="border rounded-3xl w-72 backdrop-blur bg-blue-300">
-            To Do
-          </p>
+                <p className="border rounded-3xl w-72 backdrop-blur bg-blue-300">
+                  To Do
+                </p>
                 {todo.map((task, index) => (
-                  <Draggable key={task._id} draggableId={task._id} index={index}>
+                  <Draggable
+                    key={task._id}
+                    draggableId={task._id}
+                    index={index}
+                  >
                     {(provided) => (
                       <div
                         draggable="true"
@@ -136,23 +117,26 @@ const handleSave =(()=>{
               </div>
             )}
           </Droppable>
-    
 
-        {/* Ongoing Section */}
-        
-         
+          {/* Ongoing Section */}
+
           <Droppable droppableId="Ongoing" type="group">
             {(provided) => (
               <div
-              className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216"
-               {...provided.droppableProps} ref={provided.innerRef}
-              id="Ongoing"
+                className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                id="Ongoing"
               >
-                 <p className="border rounded-3xl w-72 backdrop-blur bg-yellow-300">
-            Ongoing
-          </p>
+                <p className="border rounded-3xl w-72 backdrop-blur bg-yellow-300">
+                  Ongoing
+                </p>
                 {ongoing.map((task, index) => (
-                  <Draggable key={task._id} draggableId={task._id} index={index}>
+                  <Draggable
+                    key={task._id}
+                    draggableId={task._id}
+                    index={index}
+                  >
                     {(provided) => (
                       <div
                         draggable="true"
@@ -173,23 +157,26 @@ const handleSave =(()=>{
               </div>
             )}
           </Droppable>
-      
 
-        {/* Resolved Section */}
-        
-         
+          {/* Resolved Section */}
+
           <Droppable droppableId="Resolved" type="group">
             {(provided) => (
-
-              <div 
-              className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216"
-              {...provided.droppableProps} ref={provided.innerRef}
-              id="Resolved">
-                 <p className="border rounded-3xl w-72 backdrop-blur bg-green-300">
-            Resolved
-          </p>
+              <div
+                className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                id="Resolved"
+              >
+                <p className="border rounded-3xl w-72 backdrop-blur bg-green-300">
+                  Resolved
+                </p>
                 {resolved.map((task, index) => (
-                  <Draggable key={task._id} draggableId={task._id} index={index}>
+                  <Draggable
+                    key={task._id}
+                    draggableId={task._id}
+                    index={index}
+                  >
                     {(provided) => (
                       <div
                         draggable="true"
@@ -210,17 +197,17 @@ const handleSave =(()=>{
               </div>
             )}
           </Droppable>
-    
         </div>
-        
       </DragDropContext>
       <div>
-        <button type="submit" 
-        name="Save" 
-        onClick={handleSave} 
-        className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500" >
+        <button
+          type="submit"
+          name="Save"
+          onClick={handleSave}
+          className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
           Save
-    </button>
+        </button>
       </div>
     </div>
   );
