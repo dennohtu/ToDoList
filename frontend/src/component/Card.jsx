@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import axios from "axios";
 import getToken from "../auth.Service";
+import {useDispatch} from "react-redux";
 
 
 const Card = () => {
+  const dispatch = useDispatch()
+  const [tasks, setTasks]= useState([])
   const [todo, setTodo] = useState([]);
   const [ongoing, setOngoing] = useState([]);
   const [resolved, setResolved] = useState([]);
@@ -90,10 +93,16 @@ const Card = () => {
       if (destination.droppableId === "Todo") setTodo(destinationItems);
       else if (destination.droppableId === "Ongoing") setOngoing(destinationItems);
       else if (destination.droppableId === "Resolved") setResolved(destinationItems);
+     
     }
   };
 const handleSave =(()=>{
 //add a save button
+
+if (!tasks===setTasks){
+  dispatch(updateTasks(tasks))
+}
+  
 
 })
   return (
@@ -125,8 +134,8 @@ const handleSave =(()=>{
                         id={task._id}
                         className="flex-row border rounded-lg justify-center content-start h-20"
                       >
-                        <h3>{task.title}</h3>
-                        <p>Title: {task.title}</p>
+                        <h2>Title: {task.title}</h2>
+                       
                         <p>Status: {task.status}</p>
                       </div>
                     )}
@@ -162,8 +171,8 @@ const handleSave =(()=>{
                         id={task._id}
                         className="flex-row border rounded-lg justify-center content-start h-20"
                       >
-                        <h3>{task.title}</h3>
-                        <p>Title: {task.title}</p>
+                        <h2>{task.title}</h2>
+                     
                         <p>Status: {task.status}</p>
                       </div>
                     )}
@@ -199,8 +208,8 @@ const handleSave =(()=>{
                         id={task._id}
                         className="flex-row border rounded-lg justify-center content-start h-20"
                       >
-                        <h3>{task.title}</h3>
-                        <p>Title: {task.title}</p>
+                        <h2>Title: {task.title}</h2>
+                      
                         <p>Status: {task.status}</p>
                       </div>
                     )}
