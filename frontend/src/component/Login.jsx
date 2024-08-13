@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { SuccessToast, ErrorToast, LoadingToast, ToasterContainer } from "../Toaster";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,25 +9,33 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-
   const handleLogin = async (e) => {
     e.preventDefault();
+    LoadingToast(true); 
     try {
       const response = await axios.post("http://localhost:5000/api/user/login", {
         email,
         password,
       });
-
-      if (response) {
-        const result = response.data.data
-        console.log(result);
+  
+      if (response.status === 200) {
+        const result = response.data.data;
         localStorage.setItem('token', result.token);
+        SuccessToast("Login successful!");
         navigate("/dashboard");
       } else {
-        setError("Invalid email or password.");
+        // setError("Invalid ")
+        ErrorToast("Invalid email or password.");
       }
     } catch (err) {
-      setError("Login failed. Please try again.");
+      // Handle different error statuses
+      if (err.response && err.response.status === 401) {
+        ErrorToast("Invalid email or password.");
+      } else {
+        ErrorToast("Login failed. Please try again.");
+      }
+    } finally {
+      LoadingToast(false); 
     }
   };
 
@@ -79,6 +88,7 @@ const Login = () => {
           </div>
         </form>
       </div>
+      <ToasterContainer/>
     </div>
   );
 };

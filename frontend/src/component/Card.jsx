@@ -1,5 +1,8 @@
+import axios from "axios";
 import React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { MdAutoDelete } from "react-icons/md";
+
 
 const Card = ({
   todo,
@@ -21,8 +24,8 @@ const Card = ({
         source.droppableId === "Todo"
           ? todo
           : source.droppableId === "Ongoing"
-          ? ongoing
-          : resolved
+            ? ongoing
+            : resolved
       );
       const [movedItem] = items.splice(source.index, 1);
       items.splice(destination.index, 0, movedItem);
@@ -36,15 +39,15 @@ const Card = ({
         source.droppableId === "Todo"
           ? todo
           : source.droppableId === "Ongoing"
-          ? ongoing
-          : resolved
+            ? ongoing
+            : resolved
       );
       const destinationItems = Array.from(
         destination.droppableId === "Todo"
           ? todo
           : destination.droppableId === "Ongoing"
-          ? ongoing
-          : resolved
+            ? ongoing
+            : resolved
       );
       const [movedItem] = sourceItems.splice(source.index, 1);
 
@@ -53,8 +56,8 @@ const Card = ({
         destination.droppableId === "Todo"
           ? "new"
           : destination.droppableId === "Ongoing"
-          ? "ongoing"
-          : "done";
+            ? "ongoing"
+            : "done";
 
       destinationItems.splice(destination.index, 0, movedItem);
 
@@ -74,6 +77,23 @@ const Card = ({
     //add a save button
     //fetch data to update state
     fetchData();
+  };
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem('token'); // Replace with your method to get the token
+      const response = await axios.delete(`http://localhost:5000/api/tasks/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Ensure 'Bearer' or 'jwt' is used based on your API's expected format
+        },
+      });
+  
+      const data = response.data.data; // Assuming the response structure includes data in 'data' property
+  
+      // Call fetchData to update the state
+      fetchData();
+    } catch (error) {
+      console.error("Failed to delete the task:", error);
+    }
   };
 
   return (
@@ -108,7 +128,14 @@ const Card = ({
                       >
                         <h3>{task.title}</h3>
                         <p>Title: {task.title}</p>
-                        <p>Status: {task.status}</p>
+                        <p className="flex justify-evenly ml-16">
+                          Status: {task.status}
+                          <MdAutoDelete
+                            style={{ fontSize: '20px' }}
+                            className="text-red-700 cursor-pointer"
+                            onClick={() => handleDelete(task._id)}
+                          />
+                        </p>
                       </div>
                     )}
                   </Draggable>
@@ -148,7 +175,14 @@ const Card = ({
                       >
                         <h3>{task.title}</h3>
                         <p>Title: {task.title}</p>
-                        <p>Status: {task.status}</p>
+                        <p className="flex justify-evenly ml-16">
+                          Status: {task.status}
+                          <MdAutoDelete
+                            style={{ fontSize: '20px' }}
+                            className=" text-red-700"
+                            onClick={() => handleDelete(task._id)}
+                          />
+                        </p>
                       </div>
                     )}
                   </Draggable>
@@ -188,7 +222,14 @@ const Card = ({
                       >
                         <h3>{task.title}</h3>
                         <p>Title: {task.title}</p>
-                        <p>Status: {task.status}</p>
+                        <p className="flex justify-evenly ml-16">
+                          Status: {task.status}
+                          <MdAutoDelete
+                            style={{ fontSize: '20px' }}
+                            className=" text-red-700"
+                            onClick={() => handleDelete(task._id)}
+                          />
+                        </p>
                       </div>
                     )}
                   </Draggable>
