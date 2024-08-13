@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToasterContainer,SuccessToast, ErrorToast, LoadingToast } from "../Toaster"; // Adjust the path to where you have defined the toasts
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -18,13 +19,16 @@ const Register = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    LoadingToast(true); // Show loading toast
     try {
       const response = await axios.post("http://localhost:5000/api/user/register", data , {withCredentials: true});
-      console.log("Registration successful:", response.data);
-
+      SuccessToast("Registration successful!");
       navigate("/");
     } catch (error) {
-      console.error("There was an error registering the user:", error);
+      // console.error("There was an error registering the user:", error);
+      ErrorToast("Registration failed.The Email has been taken.");
+    } finally {
+      LoadingToast(false); // Hide loading toast
     }
   };
 
@@ -72,6 +76,7 @@ const Register = () => {
           </div>
         </form>
       </div>
+      <ToasterContainer/>
     </div>
   );
 };
