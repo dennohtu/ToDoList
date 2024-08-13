@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { SuccessToast, ErrorToast, LoadingToast, ToasterContainer } from "../Toaster";
 
 const AddTodo = ({ fetchData }) => {
   const [title, setTitle] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleAddTodo = async (e) => {
     e.preventDefault(); // Prevent the default form submission
@@ -13,15 +12,15 @@ const AddTodo = ({ fetchData }) => {
       const token = localStorage.getItem("token");
 
       if (!token) {
-        setError("You need to log in to add a to-do item.");
+        ErrorToast("You need to log in to add a to-do item.");
         return;
       }
 
+      LoadingToast(true);
+
       const response = await axios.post(
         "http://localhost:5000/api/tasks/create",
-        {
-          title: title,
-        },
+        { title },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -29,23 +28,24 @@ const AddTodo = ({ fetchData }) => {
         }
       );
 
-      console.log("response:", response.data.success);
+      LoadingToast(false);
 
-      if (response.data.success === true) {
-        setSuccess("To-do item added successfully!");
+      if (response.data.success) {
+        SuccessToast("To-do item added successfully!");
         setTitle(""); // Clear the input field on success
-        //refetch data here
-        fetchData();
+        fetchData(); // Refetch data to update the list
       } else {
-        setError("Failed to add the to-do item.");
+        ErrorToast("Failed to add the to-do item.");
       }
     } catch (err) {
-      setError("Error adding the to-do item. Please try again.");
+      LoadingToast(false);
+      ErrorToast("Error adding the to-do item. Please try again.");
     }
   };
 
   return (
     <div>
+      <ToasterContainer />
       <form onSubmit={handleAddTodo} className="flex mb-4">
         <input
           type="text"
@@ -61,8 +61,6 @@ const AddTodo = ({ fetchData }) => {
           Add
         </button>
       </form>
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">{success}</p>}
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { MdAutoDelete } from "react-icons/md";
-
+import { MdAutoDelete, MdEdit } from "react-icons/md";
+import { SuccessToast, ErrorToast, LoadingToast, ToasterContainer } from "../Toaster";
 
 const Card = ({
   todo,
@@ -13,13 +13,15 @@ const Card = ({
   setResolved,
   fetchData,
 }) => {
+  const [editTaskId, setEditTaskId] = useState(null);
+  const [newTitle, setNewTitle] = useState("");
+
   const handleDragEnd = (result) => {
     const { source, destination } = result;
 
     if (!destination) return;
 
     if (source.droppableId === destination.droppableId) {
-      // Reordering within the same droppable
       const items = Array.from(
         source.droppableId === "Todo"
           ? todo
@@ -34,7 +36,6 @@ const Card = ({
       else if (source.droppableId === "Ongoing") setOngoing(items);
       else if (source.droppableId === "Resolved") setResolved(items);
     } else {
-      // Moving between different droppables
       const sourceItems = Array.from(
         source.droppableId === "Todo"
           ? todo
@@ -50,8 +51,6 @@ const Card = ({
             : resolved
       );
       const [movedItem] = sourceItems.splice(source.index, 1);
-
-      // Update the status of the moved item
       movedItem.status =
         destination.droppableId === "Todo"
           ? "new"
@@ -61,45 +60,68 @@ const Card = ({
 
       destinationItems.splice(destination.index, 0, movedItem);
 
-      // Update state based on droppableId
       if (source.droppableId === "Todo") setTodo(sourceItems);
       else if (source.droppableId === "Ongoing") setOngoing(sourceItems);
       else if (source.droppableId === "Resolved") setResolved(sourceItems);
 
       if (destination.droppableId === "Todo") setTodo(destinationItems);
-      else if (destination.droppableId === "Ongoing")
-        setOngoing(destinationItems);
-      else if (destination.droppableId === "Resolved")
-        setResolved(destinationItems);
+      else if (destination.droppableId === "Ongoing") setOngoing(destinationItems);
+      else if (destination.droppableId === "Resolved") setResolved(destinationItems);
     }
+
+    SuccessToast("Task moved successfully!");
   };
-  const handleSave = () => {
-    //add a save button
-    //fetch data to update state
-    fetchData();
-  };
+
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem('token'); // Replace with your method to get the token
-      const response = await axios.delete(`http://localhost:5000/api/tasks/delete/${id}`, {
+      LoadingToast(true);
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5000/api/tasks/delete/${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Ensure 'Bearer' or 'jwt' is used based on your API's expected format
+          Authorization: `Bearer ${token}`,
         },
       });
-  
-      const data = response.data.data; // Assuming the response structure includes data in 'data' property
-  
-      // Call fetchData to update the state
       fetchData();
+      LoadingToast(false);
+      SuccessToast("Task deleted successfully!");
     } catch (error) {
+      LoadingToast(false);
+      ErrorToast("Failed to delete the task.");
       console.error("Failed to delete the task:", error);
     }
   };
 
+  const handleEdit = (task) => {
+    setEditTaskId(task._id);
+    setNewTitle(task.title);
+  };
+
+  const handleUpdate = async (id) => {
+    try {
+      LoadingToast(true);
+      const token = localStorage.getItem('token');
+      await axios.put(`http://localhost:5000/api/tasks/update/${id}`, { title: newTitle }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      fetchData();
+      LoadingToast(false);
+      SuccessToast("Task updated successfully!");
+      setEditTaskId(null);
+    } catch (error) {
+      LoadingToast(false);
+      ErrorToast("Failed to update the task.");
+      console.error("Failed to update the task:", error);
+    }
+  };
+
   return (
-    <div id="main" className="flex-row space-y-8 ">
+    <div id="main" className="flex-row space-y-8">
+      <ToasterContainer />
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex space-x-8 justify-center">
+          {/* Todo Section */}
           <Droppable droppableId="Todo" type="group">
             {(provided) => (
               <div
@@ -108,15 +130,69 @@ const Card = ({
                 ref={provided.innerRef}
                 id="Todo"
               >
-                <p className="border rounded-3xl w-72 backdrop-blur bg-blue-300">
-                  To Do
-                </p>
+                <p className="border rounded-3xl w-72 backdrop-blur bg-blue-300">To Do</p>
                 {todo.map((task, index) => (
-                  <Draggable
-                    key={task._id}
-                    draggableId={task._id}
-                    index={index}
-                  >
+                  <Draggable key={task._id} draggableId={task._id} index={index}>
+                    {(provided) => (
+                      <div
+                        draggable="true"
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        id={task._id}
+                        className="flex-row border rounded-lg justify-center content-start h-20"
+                      >
+                        {editTaskId === task._id ? (
+                          <>
+                            <input
+                              type="text"
+                              value={newTitle}
+                              onChange={(e) => setNewTitle(e.target.value)}
+                              className="w-full"
+                            />
+                            <button onClick={() => handleUpdate(task._id)} className="text-green-500">Save</button>
+                          </>
+                        ) : (
+                          <>
+                            <h3 className="pt-2">Title: {task.title}</h3>
+                            <p className="flex justify-evenly ml-16 pt-2">
+                              Status: {task.status}
+                              <div className="flex gap-2">
+                                <MdEdit
+                                  style={{ fontSize: '20px' }}
+                                  className="text-blue-300 cursor-pointer"
+                                  onClick={() => handleEdit(task)}
+                                />
+                                <MdAutoDelete
+                                  style={{ fontSize: '20px' }}
+                                  className="text-yellow-300 cursor-pointer"
+                                  onClick={() => handleDelete(task._id)}
+                                />
+                              </div>
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+
+          {/* Ongoing Section */}
+          <Droppable droppableId="Ongoing" type="group">
+            {(provided) => (
+              <div
+                className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                id="Ongoing"
+              >
+                <p className="border rounded-3xl w-72 backdrop-blur bg-yellow-300">Ongoing</p>
+                {ongoing.map((task, index) => (
+                  <Draggable key={task._id} draggableId={task._id} index={index}>
                     {(provided) => (
                       <div
                         draggable="true"
@@ -145,55 +221,7 @@ const Card = ({
             )}
           </Droppable>
 
-          {/* Ongoing Section */}
-
-          <Droppable droppableId="Ongoing" type="group">
-            {(provided) => (
-              <div
-                className="bg-slate-600 space-y-3 flex-row border rounded-3xl p-4 pt-5 overflow-y-auto max-h-216"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                id="Ongoing"
-              >
-                <p className="border rounded-3xl w-72 backdrop-blur bg-yellow-300">
-                  Ongoing
-                </p>
-                {ongoing.map((task, index) => (
-                  <Draggable
-                    key={task._id}
-                    draggableId={task._id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        draggable="true"
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        id={task._id}
-                        className="flex-row border rounded-lg justify-center content-start h-20"
-                      >
-                        <h3>{task.title}</h3>
-                        <p>Title: {task.title}</p>
-                        <p className="flex justify-evenly ml-16">
-                          Status: {task.status}
-                          <MdAutoDelete
-                            style={{ fontSize: '20px' }}
-                            className=" text-red-700"
-                            onClick={() => handleDelete(task._id)}
-                          />
-                        </p>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-
           {/* Resolved Section */}
-
           <Droppable droppableId="Resolved" type="group">
             {(provided) => (
               <div
@@ -202,15 +230,9 @@ const Card = ({
                 ref={provided.innerRef}
                 id="Resolved"
               >
-                <p className="border rounded-3xl w-72 backdrop-blur bg-green-300">
-                  Resolved
-                </p>
+                <p className="border rounded-3xl w-72 backdrop-blur bg-green-300">Resolved</p>
                 {resolved.map((task, index) => (
-                  <Draggable
-                    key={task._id}
-                    draggableId={task._id}
-                    index={index}
-                  >
+                  <Draggable key={task._id} draggableId={task._id} index={index}>
                     {(provided) => (
                       <div
                         draggable="true"
@@ -226,7 +248,7 @@ const Card = ({
                           Status: {task.status}
                           <MdAutoDelete
                             style={{ fontSize: '20px' }}
-                            className=" text-red-700"
+                            className="text-red-700 cursor-pointer"
                             onClick={() => handleDelete(task._id)}
                           />
                         </p>
@@ -240,16 +262,6 @@ const Card = ({
           </Droppable>
         </div>
       </DragDropContext>
-      <div>
-        <button
-          type="submit"
-          name="Save"
-          onClick={handleSave}
-          className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Save
-        </button>
-      </div>
     </div>
   );
 };
