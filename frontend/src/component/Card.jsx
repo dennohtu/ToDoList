@@ -202,17 +202,37 @@ const Card = ({
                         id={task._id}
                         className="flex-row border rounded-lg justify-center content-start h-20"
                       >
-                        <h3>{task.title}</h3>
-                        <p>Title: {task.title}</p>
-                        <p className="flex justify-evenly ml-16">
-                          Status: {task.status}
-                          <MdAutoDelete
-                            style={{ fontSize: '20px' }}
-                            className="text-red-700 cursor-pointer"
-                            onClick={() => handleDelete(task._id)}
-                          />
-                        </p>
-                      </div>
+                        {editTaskId === task._id ? (
+                          <>
+                            <input
+                              type="text"
+                              value={newTitle}
+                              onChange={(e) => setNewTitle(e.target.value)}
+                              className="w-full"
+                            />
+                            <button onClick={() => handleUpdate(task._id)} className="text-green-500">Save</button>
+                          </>
+                        ) : (
+                          <>
+                            <h3 className="pt-2">Title: {task.title}</h3>
+                            <p className="flex justify-evenly ml-16 pt-2">
+                              Status: {task.status}
+                              <div className="flex gap-2">
+                                <MdEdit
+                                  style={{ fontSize: '20px' }}
+                                  className="text-blue-300 cursor-pointer"
+                                  onClick={() => handleEdit(task)}
+                                />
+                                <MdAutoDelete
+                                  style={{ fontSize: '20px' }}
+                                  className="text-yellow-300 cursor-pointer"
+                                  onClick={() => handleDelete(task._id)}
+                                />
+                              </div>
+                            </p>
+                          </>
+                        )}
+                        </div>
                     )}
                   </Draggable>
                 ))}
@@ -242,16 +262,36 @@ const Card = ({
                         id={task._id}
                         className="flex-row border rounded-lg justify-center content-start h-20"
                       >
-                        <h3>{task.title}</h3>
-                        <p>Title: {task.title}</p>
-                        <p className="flex justify-evenly ml-16">
-                          Status: {task.status}
-                          <MdAutoDelete
-                            style={{ fontSize: '20px' }}
-                            className="text-red-700 cursor-pointer"
-                            onClick={() => handleDelete(task._id)}
-                          />
-                        </p>
+                       {editTaskId === task._id ? (
+                          <>
+                            <input
+                              type="text"
+                              value={newTitle}
+                              onChange={(e) => setNewTitle(e.target.value)}
+                              className="w-full"
+                            />
+                            <button onClick={() => handleUpdate(task._id)} className="text-green-500">Save</button>
+                          </>
+                        ) : (
+                          <>
+                            <h3 className="pt-2">Title: {task.title}</h3>
+                            <p className="flex justify-evenly ml-16 pt-2">
+                              Status: {task.status}
+                              <div className="flex gap-2">
+                                <MdEdit
+                                  style={{ fontSize: '20px' }}
+                                  className="text-blue-300 cursor-pointer"
+                                  onClick={() => handleEdit(task)}
+                                />
+                                <MdAutoDelete
+                                  style={{ fontSize: '20px' }}
+                                  className="text-yellow-300 cursor-pointer"
+                                  onClick={() => handleDelete(task._id)}
+                                />
+                              </div>
+                            </p>
+                          </>
+                        )}
                       </div>
                     )}
                   </Draggable>
