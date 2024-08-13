@@ -1,44 +1,5 @@
 import React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-<<<<<<< HEAD
-=======
-import axios from "axios";
-import getToken from "../auth.Service";
-import {useDispatch} from "react-redux";
-
-
-const Card = () => {
-  const dispatch = useDispatch()
-  const [tasks, setTasks]= useState([])
-  const [todo, setTodo] = useState([]);
-  const [ongoing, setOngoing] = useState([]);
-  const [resolved, setResolved] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = getToken();
-
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/tasks/getAll",
-          {
-            headers: {
-              Authorization: `jwt ${token}`,
-            },
-          }
-        );
-        const data = response.data.data;
-        setTodo(data.filter((task) => task.status === "new"));
-        setOngoing(data.filter((task) => task.status === "ongoing"));
-        setResolved(data.filter((task) => task.status === "done"));
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
->>>>>>> 229cff57e43dd501e552dc2814665885f3ca1379
 
 const Card = ({
   todo,
@@ -103,16 +64,10 @@ const Card = ({
       else if (source.droppableId === "Resolved") setResolved(sourceItems);
 
       if (destination.droppableId === "Todo") setTodo(destinationItems);
-<<<<<<< HEAD
       else if (destination.droppableId === "Ongoing")
         setOngoing(destinationItems);
       else if (destination.droppableId === "Resolved")
         setResolved(destinationItems);
-=======
-      else if (destination.droppableId === "Ongoing") setOngoing(destinationItems);
-      else if (destination.droppableId === "Resolved") setResolved(destinationItems);
-     
->>>>>>> 229cff57e43dd501e552dc2814665885f3ca1379
     }
   };
   const handleSave = () => {
@@ -121,15 +76,6 @@ const Card = ({
     fetchData();
   };
 
-<<<<<<< HEAD
-=======
-if (!tasks===setTasks){
-  dispatch(updateTasks(tasks))
-}
-  
-
-})
->>>>>>> 229cff57e43dd501e552dc2814665885f3ca1379
   return (
     <div id="main" className="flex-row space-y-8 ">
       <DragDropContext onDragEnd={handleDragEnd}>

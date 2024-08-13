@@ -1,0 +1,3 @@
+MONGO_URL="mongodb+srv://kennynet66:kennynet66@cluster0.dcfto7l.mongodb.net/?retryWrites=true&w=majority"
+PORT=5000
+SECRET=jgwueyr83h4yucfte7y98euv4yreirtvr87eywiudc78g
