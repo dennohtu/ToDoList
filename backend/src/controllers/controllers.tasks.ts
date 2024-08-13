@@ -8,6 +8,16 @@ const schema = Joi.object({
   status: Joi.string().valid("new", "ongoing", "completed"),
 });
 
+const updateSchema = Joi.object({
+  userId: Joi.string().required(),
+  title: Joi.string().required(),
+  status: Joi.string().required(),
+  isEdited: Joi.boolean().required(),
+  createdAt: Joi.string().required(),
+  updatedAt: Joi.string().required(),
+  __v: 0
+})
+
 export const createTask = async (req: Request, res: Response) => {
   const data = req.body;
 
@@ -106,7 +116,7 @@ export const updateMany = async (req: Request, res: Response) => {
       const id = taskBody.id;
       const task = taskBody.task;
 
-      const { error } = schema.validate(task);
+      const { error } = updateSchema.validate(task);
 
       if (error) {
         sendResponse(res, false, error.message);

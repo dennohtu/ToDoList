@@ -1,2 +1,33 @@
 GET http://localhost:5000/api/tasks/getAll
 Authorization: jwt eyJhbGciOiJIUzI1NiJ9.NjZiNjJhYmYzZDg4ZjU2N2FjZjI0OTc3.Luc6pYzFIWR29xhFibPHiUH_588wiFPlAipd6AIPfcI
+
+### Update many
+PUT  http://localhost:5000/api/tasks/updateMany
+Content-Type: application/json
+Authorization: jwt eyJhbGciOiJIUzI1NiJ9.NjZiNjJhYmYzZDg4ZjU2N2FjZjI0OTc3.Luc6pYzFIWR29xhFibPHiUH_588wiFPlAipd6AIPfcI
+
+
+    [
+        {
+      "id": "66b62b93b176b28d32abd080",
+      "task":  {
+      "userId": "66b62abf3d88f567acf24977",
+      "title": "I am updating second",
+      "status": "new",
+      "isEdited": false,
+      "createdAt": "2024-08-09T14:45:39.818Z",
+      "updatedAt": "2024-08-09T14:45:39.818Z",
+      "__v": 0
+    }},
+    {
+      "id": "66b6329d76de4985363aa34d",
+      "task":{
+      "userId": "66b62abf3d88f567acf24977",
+      "title": "A new updated todo",
+      "status": "new",
+      "isEdited": false,
+      "createdAt": "2024-08-09T15:15:41.040Z",
+      "updatedAt": "2024-08-09T15:15:41.040Z",
+      "__v": 0
+    }}
+    ]

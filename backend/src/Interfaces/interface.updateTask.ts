@@ -1,4 +1,4 @@
 interface updateTask {
-  id: String;
+  id: string;
   task: Task;
 }
