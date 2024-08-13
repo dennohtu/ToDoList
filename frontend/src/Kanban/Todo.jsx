@@ -1,9 +1,10 @@
 import React from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 
 const Todo = ({ todo }) => {
   
   return (
+    
     <Droppable droppableId="Todo" type="group">
       {(provided) => (
         <div
@@ -14,6 +15,7 @@ const Todo = ({ todo }) => {
         >
           <p className="border rounded-3xl w-72 backdrop-blur bg-blue-300">To Do</p>
           {todo.map((task, index) => (
+             
             <Draggable key={task._id} draggableId={task._id} index={index}>
               {(provided) => (
                 <div
@@ -23,7 +25,9 @@ const Todo = ({ todo }) => {
                   {...provided.dragHandleProps}
                   id={task._id}
                   className="flex-row border rounded-lg justify-center content-start h-20"
+
                 >
+                
                   <h2>Title: {task.title}</h2>
                   <p>Status: {task.status}</p>
                 </div>
@@ -31,10 +35,12 @@ const Todo = ({ todo }) => {
             </Draggable>
           ))}
           {provided.placeholder}
+          
         </div>
       )}
     </Droppable>
   );
+ 
 };
 
 export default Todo;

@@ -1,25 +1,26 @@
-// taskReducer.js
-import { ADD_TASKS, GET_TASKS } from './actions';
+import { createSlice } from '@reduxjs/toolkit';
+import { getAllTasks, addTasksData } from './actions';
 
 const initialState = {
   tasks: [],
 };
 
-const taskReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case ADD_TASKS:
-      return {
-        ...state,
-        tasks: [...state.tasks, ...action.payload],
-      };
-    case GET_TASKS:
-      return {
-        ...state,
-        tasks: action.payload,
-      };
-    default:
-      return state;
-  }
-};
+const taskSlice = createSlice({
+  name: 'tasks',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllTasks.fulfilled, (state, action) => {
+        state.tasks = action.payload;
+      })
+      .addCase(addTasksData.fulfilled, (state, action) => {
+        state.tasks.push(action.payload);
+      })
+      .addCase(getAllTasks.rejected, (state, action) => {
+        console.error('Failed to fetch tasks:', action.payload);
+      });
+  },
+});
 
-export default taskReducer;
+export default taskSlice.reducer;

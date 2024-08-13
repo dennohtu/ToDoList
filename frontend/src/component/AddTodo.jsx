@@ -1,41 +1,26 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { addTasksData } from '../stores/actions';
 
 const AddTodo = () => {
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const dispatch = useDispatch();
 
   const handleAddTodo = async (e) => {
     e.preventDefault(); // Prevent the default form submission
 
+    if (!title) {
+      setError("Title is required.");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        setError("You need to log in to add a to-do item.");
-        return;
-      }
-
-      const response = await axios.post(
-        'http://localhost:5000/api/tasks/create',
-        {
-          title: title
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      console.log('response:', response.data.success);
-
-      if (response.data.success === true) {
+      const resultAction = await dispatch(addTasksData({ title })).unwrap();
+      if (resultAction.success) {
         setSuccess("To-do item added successfully!");
         setTitle(""); // Clear the input field on success
-      } else {
-        setError("Failed to add the to-do item.");
       }
     } catch (err) {
       setError("Error adding the to-do item. Please try again.");
