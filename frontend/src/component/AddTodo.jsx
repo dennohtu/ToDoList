@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const AddTodo = ({ fetchData }) => {
+const AddTodo = () => {
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -18,24 +18,22 @@ const AddTodo = ({ fetchData }) => {
       }
 
       const response = await axios.post(
-        "http://localhost:5000/api/tasks/create",
+        'http://localhost:5000/api/tasks/create',
         {
-          title: title,
+          title: title
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
 
-      console.log("response:", response.data.success);
+      console.log('response:', response.data.success);
 
       if (response.data.success === true) {
         setSuccess("To-do item added successfully!");
         setTitle(""); // Clear the input field on success
-        //refetch data here
-        fetchData();
       } else {
         setError("Failed to add the to-do item.");
       }
