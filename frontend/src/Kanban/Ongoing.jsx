@@ -23,7 +23,7 @@ const Ongoing = ({ ongoing }) => {
                   id={task._id}
                   className="flex-row border rounded-lg justify-center content-start h-20"
                 >
-                  <h2>{task.title}</h2>
+                  <h2>Title:{task.title}</h2>
                   <p>Status: {task.status}</p>
                 </div>
               )}

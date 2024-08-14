@@ -49,13 +49,37 @@ export const getAllTasks = createAsyncThunk(
       if (response.status !== 200) {
         throw new Error('Failed to get tasks data');
       }
-      console.log('Fetched tasks:', response.data.data); // Correct console.log
+      // console.log('Fetched tasks:', response.data.data); // Correct console.log
       return response.data.data; // Return the tasks data from the response
     } catch (error) {
       return thunkApi.rejectWithValue(error.message);
     }
   }
 );
+export const updateTaskData= createAsyncThunk(
+  'tasks/updateTasks',
+  async(updatedTask,thunkApi)=>{
+    try {
+      const token = getToken();
+      const response = await axios.put(
+        `http://localhost:5000/api/tasks/updateMany`,
+        updatedTask,
+        {
+          headers: {
+            Authorization: `jwt ${token}`,
+          },
+        }
+      );
 
+      if (response.status !== 200) {
+        throw new Error('Failed to update task data');
+      }
+
+      return response.data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.message);
+    }
+  }
+)
 
 // export default { UPDATE_TASKS, GET_TASKS ,ADD_TASKS};

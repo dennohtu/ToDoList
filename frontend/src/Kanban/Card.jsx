@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import Todo from "./Todo.jsx";
 import Ongoing from "./Ongoing.jsx";
 import Resolved from "./Resolved.jsx";
-import { getAllTasks } from "../stores/actions.js";
+import { getAllTasks,updateTaskData, } from "../stores/actions.js";
+import { updateLocalTasks } from "../stores/taskReducer.js";
 
 const Card = () => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.tasks);
-console.log(tasks)
+// console.log(tasks)
 
   useEffect(() => {
     dispatch(getAllTasks());
@@ -18,7 +19,7 @@ console.log(tasks)
 
 
   const todo = tasks.filter((task) => task.status === 'new');
-  console.log(todo)
+  // console.log(todo)
   const ongoing = tasks.filter((task) => task.status === 'ongoing');
   const resolved = tasks.filter((task) => task.status === 'done');
 
@@ -28,44 +29,55 @@ console.log(tasks)
 
     if (!destination) return;
 
-    const sourceList = source.droppableId === "Todo" ? todo : source.droppableId === "Ongoing" ? ongoing : resolved;
-    const destinationList = destination.droppableId === "Todo" ? todo : destination.droppableId === "Ongoing" ? ongoing : resolved;
+    let sourceList, destinationList;
+
+    // Determine source and destination lists
+    switch (source.droppableId) {
+        case "Todo":
+            sourceList = todo;
+            break;
+        case "Ongoing":
+            sourceList = ongoing;
+            break;
+        case "Resolved":
+            sourceList = resolved;
+            break;
+        default:
+            return;
+    }
+
+    switch (destination.droppableId) {
+        case "Todo":
+            destinationList = todo;
+            break;
+        case "Ongoing":
+            destinationList = ongoing;
+            break;
+        case "Resolved":
+            destinationList = resolved;
+            break;
+        default:
+            return;
+    }
 
     if (source.droppableId === destination.droppableId) {
-      const updatedList = Array.from(sourceList);
-      const [movedItem] = updatedList.splice(source.index, 1);
-      updatedList.splice(destination.index, 0, movedItem);
+        // Reordering within the same list
+        const updatedList = Array.from(sourceList);
+        const movedItem = updatedList.splice(source.index, 1);
+        updatedList.splice(destination.index, 0, movedItem[0]);
 
-      const updatedTasks = tasks.map((task) =>
-        task.id === movedItem.id ? { ...task, order: destination.index } : task
-      );
+        dispatch(updateLocalTasks(updatedList));
+    // 
+    } else{
 
-      dispatch(updateTasksData(updatedTasks));
-    } else {
-      const updatedSourceList = Array.from(sourceList);
-      const updatedDestinationList = Array.from(destinationList);
-      const [movedItem] = updatedSourceList.splice(source.index, 1);
-
-      movedItem.status =
-        destination.droppableId === "Todo"
-          ? "new"
-          : destination.droppableId === "Ongoing"
-          ? "ongoing"
-          : "done";
-
-      updatedDestinationList.splice(destination.index, 0, movedItem);
-
-      const updatedTasks = tasks.map((task) =>
-        task.id === movedItem.id ? movedItem : task
-      );
-
-      dispatch(updateTasksData(updatedTasks));
     }
-  };
+
+  
+  }
 
   const handleSave = () => {
     if (tasks.length) {
-      dispatch(updateTasksData(tasks));
+      dispatch(updateTaskData(tasks));
     }
   };
 

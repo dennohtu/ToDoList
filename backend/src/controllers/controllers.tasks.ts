@@ -1,7 +1,7 @@
 import Joi = require("joi");
 import sendResponse from "../utils/sendResponse";
 import { Request, Response } from "express";
-import Task from "../models/models.tasks";
+import Task from "../Models/models.tasks";
 
 const schema = Joi.object({
   title: Joi.string().min(1).max(30).optional(),
